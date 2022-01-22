@@ -1,3 +1,10 @@
+"""Polls admin models."""
+
+# Django
 from django.contrib import admin
 
-# Register your models here.
+# Models
+from .models import Choice, Question
+
+
+admin.site.register(Question)

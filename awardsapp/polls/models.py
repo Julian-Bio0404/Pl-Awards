@@ -1,4 +1,11 @@
+"""Polls models."""
+
+# Utilities
+import datetime
+
+# Django
 from django.db import models
+from django.utils import timezone
 
 
 class Question(models.Model):
@@ -7,6 +14,14 @@ class Question(models.Model):
     text = models.CharField(max_length=200)
     date = models.DateTimeField()
 
+    def __str__(self) -> str:
+        """Return question text."""
+        return self.text
+    
+    def published_recently(self) -> bool:
+        """Check if the pub date is recently."""
+        return self.date >= timezone.now() - datetime.timedelta(days=1)
+
 
 class Choice(models.Model):
     """Choice model."""
@@ -14,3 +29,7 @@ class Choice(models.Model):
     question = models.ForeignKey('polls.Question', on_delete=models.CASCADE)
     text = models.CharField(max_length=200)
     votes = models.BigIntegerField(default=0)
+
+    def __str__(self) -> str:
+        """Return choice text."""
+        return self.text
