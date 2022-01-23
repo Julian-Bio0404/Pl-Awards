@@ -1,11 +1,12 @@
 """Polls views."""
 
 # Django
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 # Models
-from polls.models import Question
+from polls.models import Choice, Question
 
 
 def index(request):
@@ -23,4 +24,13 @@ def results(request, question_id):
 
 
 def vote(request, question_id):
-    return HttpResponse(f'Vote for {question_id}')
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        return render(
+            request, 'polls/detail.html',
+            {'question': question, 'error_message': 'You did not choose an answer'})
+    choice.votes +=1
+    choice.save()
+    return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
