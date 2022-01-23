@@ -1,9 +1,16 @@
+"""Polls views."""
+
+# Django
 from django.shortcuts import render
 from django.http import HttpResponse
 
+# Models
+from polls.models import Question
+
 
 def index(request):
-    return HttpResponse('Hello world!')
+    questions = Question.objects.all()
+    return render(request, 'polls/index.html', {'questions': questions})
 
 
 def detail(request, question_id):
