@@ -20,7 +20,8 @@ class Question(models.Model):
     
     def published_recently(self) -> bool:
         """Check if the pub date is recently."""
-        return self.date >= timezone.now() - datetime.timedelta(days=1)
+        now = timezone.now()
+        return now >= self.date >= now - datetime.timedelta(days=1)
 
 
 class Choice(models.Model):
