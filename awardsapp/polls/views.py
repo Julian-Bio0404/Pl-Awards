@@ -1,6 +1,7 @@
 """Polls views."""
 
 # Django
+from datetime import date
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -28,6 +29,10 @@ class DetailView(generic.DetailView):
 
     model = Question
     template_name = 'polls/detail.html'
+
+    def get_queryset(self):
+        """Excludes any question that are not published yet."""
+        return Question.objects.filter(date__lte=timezone.now())
 
 
 class ResultView(generic.DetailView):
